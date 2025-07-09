@@ -1,6 +1,6 @@
 <template>
   <div class="about-wrapper">
-    <div class="graph-wrapper">
+    <div class="graph-wrapper" style="width:100%; height:100%">
       <div class="app-content" id="container"></div>
     </div>
     <div class="btn-group">
@@ -81,10 +81,26 @@ export default {
 
     this.graph = new Graph({
       container: document.getElementById('container'),
+      autoResize: true,
       width: 800,
       height: 600,
       background: {
         color: '#F2F7FA'
+      },
+      grid: {
+        visible: true,
+        type: 'doubleMesh',
+        args: [
+          {
+            color: '#eee', // 主网格线颜色
+            thickness: 1 // 主网格线宽度
+          },
+          {
+            color: '#ddd', // 次网格线颜色
+            thickness: 1, // 次网格线宽度
+            factor: 4 // 主次网格线间隔
+          }
+        ]
       }
     })
 
