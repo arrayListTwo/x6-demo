@@ -4,6 +4,7 @@
       <div class="app-content" id="container"></div>
     </div>
     <div class="btn-group">
+      <button @click="addNode">添加节点</button>
       <button @click="exportGraphData">导出</button>
     </div>
   </div>
@@ -101,7 +102,9 @@ export default {
             factor: 4 // 主次网格线间隔
           }
         ]
-      }
+      },
+      panning: true,
+      mousewheel: true
     })
 
     // 添加 Snipline 插件
@@ -111,9 +114,30 @@ export default {
     // 渲染元素
     this.graph.fromJSON(graphData)
     // 局中显示
-    this.graph.centerContent()
+    // this.graph.centerContent()
+    // 自动缩放以适应内容
+    this.graph.zoomToFit({ maxScale: 1 })
   },
   methods: {
+    addNode () {
+      this.graph.addNode({
+        shape: 'rect',
+        x: 100,
+        y: 40,
+        width: 100,
+        height: 40,
+        attrs: {
+          // body 是选择器名称，选中的是 rect 元素
+          body: {
+            stroke: '#8f8f8f',
+            strokeWidth: 1,
+            fill: '#fff',
+            rx: 6,
+            ry: 6
+          }
+        }
+      })
+    },
     exportGraphData () {
       console.log(JSON.stringify(this.graph.toJSON(), 2))
     }
