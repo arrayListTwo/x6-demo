@@ -5,6 +5,9 @@
     </div>
     <div class="btn-group">
       <button @click="addNode">添加节点</button>
+      <button @click="getNodeProp">节点prop()</button>
+      <button @click="setProp">更改prop</button>
+      <button @click="setAttr">更改attr</button>
       <button @click="exportGraphData">导出</button>
     </div>
   </div>
@@ -19,11 +22,49 @@ export default {
   data () {
     return {
       msg: 'This is an about page',
-      graph: null
+      graph: null,
+      node: null
     }
   },
   mounted () {
-    const graphData = {
+    // 自定义节点
+    Graph.registerNode('custom-node', {
+      inherit: 'rect', // 继承自 rect 节点
+      width: 100,
+      height: 40,
+      markup: [
+        {
+          tagName: 'rect', // 标签名称
+          selector: 'body' // 选择器名称
+        },
+        {
+          tagName: 'image',
+          selector: 'img'
+        },
+        {
+          tagName: 'text',
+          selector: 'label'
+        }
+      ],
+      attrs: {
+        body: {
+          stroke: '#8f8f8f',
+          strokeWidth: 1,
+          fill: '#fff',
+          rx: 6,
+          ry: 6
+        },
+        img: {
+          'xlink:href': 'https://gw.alipayobjects.com/zos/antfincdn/FLrTNDvlna/antv.png',
+          width: 16,
+          height: 16,
+          x: 12,
+          y: 12
+        }
+      }
+    })
+
+    /* const graphData = {
       nodes: [
         {
           id: 'node1',
@@ -78,7 +119,7 @@ export default {
           }
         }
       ]
-    }
+    } */
 
     this.graph = new Graph({
       container: document.getElementById('container'),
@@ -111,16 +152,42 @@ export default {
     this.graph.use(new Snapline({
       enabled: true
     }))
+
+    const source = this.graph.addNode({
+      shape: 'custom-node',
+      x: 40,
+      y: 40,
+      label: 'hello'
+    })
+
+    const target = this.graph.addNode({
+      shape: 'custom-node',
+      x: 160,
+      y: 180,
+      label: 'world'
+    })
+
+    this.graph.addEdge({
+      shape: 'edge',
+      source,
+      target,
+      attrs: {
+        line: {
+          stroke: '#8f8f8f',
+          strokeWidth: 1
+        }
+      }
+    })
     // 渲染元素
-    this.graph.fromJSON(graphData)
+    // this.graph.fromJSON(graphData)
     // 局中显示
-    // this.graph.centerContent()
+    this.graph.centerContent()
     // 自动缩放以适应内容
-    this.graph.zoomToFit({ maxScale: 1 })
+    // this.graph.zoomToFit({ maxScale: 1 })
   },
   methods: {
     addNode () {
-      this.graph.addNode({
+      this.node = this.graph.addNode({
         shape: 'rect',
         x: 100,
         y: 40,
@@ -137,6 +204,16 @@ export default {
           }
         }
       })
+    },
+    getNodeProp () {
+      console.log(this.node.prop())
+    },
+    setProp () {
+      // this.node.prop('label', 'new label')
+      this.node.prop('size', { width: 120, height: 50 })
+    },
+    setAttr () {
+      this.node.attr('body/fill', '#000')
     },
     exportGraphData () {
       console.log(JSON.stringify(this.graph.toJSON(), 2))
