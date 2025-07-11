@@ -173,6 +173,7 @@ export default {
       target,
       attrs: {
         line: {
+          targetMarker: 'circle',
           stroke: '#8f8f8f',
           strokeWidth: 1
         }
