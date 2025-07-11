@@ -173,9 +173,19 @@ export default {
       target,
       attrs: {
         line: {
-          targetMarker: 'circle',
           stroke: '#8f8f8f',
-          strokeWidth: 1
+          strokeWidth: 1,
+          sourceMarker: {
+            tagName: 'path',
+            d: 'M 20 -10 0 0 20 10 Z'
+          },
+          targetMarker: {
+            tagName: 'path',
+            d: 'M 20 -10 0 0 20 10 Z',
+            fill: 'yellow',
+            stroke: 'red',
+            strokeWidth: 2
+          }
         }
       }
     })
