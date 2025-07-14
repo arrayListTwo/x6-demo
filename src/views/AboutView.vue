@@ -189,6 +189,9 @@ export default {
       connecting: {
         router: 'orth',
         connector: 'rounded',
+        allowLoop: false,
+        allowBlank: false,
+        allowMulti: false,
         createEdge () {
           return this.createEdge({
             attrs: {
@@ -199,7 +202,7 @@ export default {
             }
           })
         },
-        validateMagnet ({ magnet }) {
+        /*  validateMagnet ({ magnet }) {
           console.log('magnet: ', magnet)
           // 节点上方的连接桩无法创建连线
           return magnet.getAttribute('port-group') !== 'top'
@@ -236,7 +239,7 @@ export default {
           }
 
           return true
-        },
+        }, */
         highlighting: {
           // 连接桩可以被连接时在连接桩外围围渲染一个包围框
           magnetAvailable: {
@@ -289,7 +292,7 @@ export default {
       enabled: true
     }))
 
-    /* const source =  */this.graph.addNode({
+    const source = this.graph.addNode({
       shape: 'custom-node-with-port',
       x: 40,
       y: 40,
@@ -336,7 +339,7 @@ export default {
       label: 'world'
     }) */
 
-    this.graph.addNode({
+    const target = this.graph.addNode({
       shape: 'custom-node-with-port',
       x: 160,
       y: 180,
@@ -375,6 +378,18 @@ export default {
     }) */
     // 渲染元素
     // this.graph.fromJSON(graphData)
+    this.graph.on('cell:click', ({ e, x, y, cell, view }) => {
+      console.log('cell:click: ', cell)
+    })
+    this.graph.on('node:click', ({ e, x, y, node, view }) => {
+      console.log('node:click: ', node)
+    })
+    this.graph.on('edge:click', ({ e, x, y, edge, view }) => {
+      console.log('edge:click: ', edge)
+    })
+    this.graph.on('blank:click', ({ e, x, y }) => {
+      console.log('blank:click: ', e)
+    })
     // 局中显示
     this.graph.centerContent()
     // 自动缩放以适应内容
