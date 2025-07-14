@@ -202,7 +202,15 @@ export default {
         items: [
           {
             id: 'port1',
-            group: 'top'
+            group: 'top',
+            label: {
+              position: 'right'
+            },
+            attrs: {
+              text: {
+                text: 'hello'
+              }
+            }
           },
           {
             id: 'port2',
