@@ -102,7 +102,7 @@ export default {
           }
         }
       }
-    })
+    }, true)
 
     /* const graphData = {
       nodes: [
@@ -185,7 +185,103 @@ export default {
         ]
       },
       panning: true,
-      mousewheel: true
+      mousewheel: true,
+      connecting: {
+        router: 'orth',
+        connector: 'rounded',
+        createEdge () {
+          return this.createEdge({
+            attrs: {
+              line: {
+                stroke: '#8f8f8f',
+                strokeWidth: 1
+              }
+            }
+          })
+        },
+        validateMagnet ({ magnet }) {
+          console.log('magnet: ', magnet)
+          // 节点上方的连接桩无法创建连线
+          return magnet.getAttribute('port-group') !== 'top'
+        },
+        validateConnection ({
+          sourceCell,
+          targetCell,
+          sourceMagnet,
+          targetMagnet
+        }) {
+          // 不能连接自身
+          if (sourceCell === targetCell) {
+            return false
+          }
+
+          // 只能从 bottom 连接桩开始连接，连接到 top 连接桩
+          if (
+            !sourceMagnet ||
+            sourceMagnet.getAttribute('port-group') === 'top'
+          ) {
+            return false
+          }
+          if (
+            !targetMagnet ||
+            targetMagnet.getAttribute('port-group') !== 'top'
+          ) {
+            return false
+          }
+          // 不能重复连线
+          const edges = this.getEdges()
+          const portId = targetMagnet.getAttribute('port')
+          if (edges.find((edge) => edge.getTargetPortId() === portId)) {
+            return false
+          }
+
+          return true
+        },
+        highlighting: {
+          // 连接桩可以被连接时在连接桩外围围渲染一个包围框
+          magnetAvailable: {
+            name: 'stroke',
+            args: {
+              attrs: {
+                fill: '#fff',
+                stroke: '#A4DEB1',
+                strokeWidth: 4
+              }
+            }
+          },
+          // 连接桩吸附连线时在连接桩外围围渲染一个包围框
+          magnetAdsorbed: {
+            name: 'stroke',
+            args: {
+              attrs: {
+                fill: '#fff',
+                stroke: '#31d0c6',
+                strokeWidth: 4
+              }
+            }
+          }
+        }
+      },
+      embedding: {
+        enabled: true,
+        findParent ({ node }) {
+          // 获取移动节点的包围盒
+          const bbox = node.getBBox()
+          console.log('bbox: ', bbox)
+          // 找到 data 中配置 { parent: true } 的节点，并且移动节点和找到的节点包围盒相交时，返回 true
+          console.log('this.getNodes(): ', this.getNodes())
+          return this.getNodes().filter((node) => {
+            const data = node.getData()
+            if (data && data.parent) {
+              const targetBBox = node.getBBox()
+              console.log('targetBBox: ', targetBBox)
+              console.log('intersect: ', bbox.isIntersectWithRect(targetBBox))
+              return bbox.isIntersectWithRect(targetBBox)
+            }
+            return false
+          })
+        }
+      }
     })
 
     // 添加 Snipline 插件
@@ -193,10 +289,12 @@ export default {
       enabled: true
     }))
 
-    const source = this.graph.addNode({
+    /* const source =  */this.graph.addNode({
       shape: 'custom-node-with-port',
       x: 40,
       y: 40,
+      width: 300,
+      height: 100,
       label: 'hello',
       ports: {
         items: [
@@ -225,17 +323,35 @@ export default {
             group: 'bottom'
           }
         ]
+      },
+      data: {
+        parent: true
       }
     })
 
-    const target = this.graph.addNode({
+    /*  const target = this.graph.addNode({
       shape: 'custom-node',
       x: 160,
       y: 180,
       label: 'world'
+    }) */
+
+    this.graph.addNode({
+      shape: 'custom-node-with-port',
+      x: 160,
+      y: 180,
+      label: 'world',
+      ports: {
+        items: [
+          {
+            id: '2port1',
+            group: 'top'
+          }
+        ]
+      }
     })
 
-    this.graph.addEdge({
+    /* this.graph.addEdge({
       shape: 'edge',
       source,
       target,
@@ -256,7 +372,7 @@ export default {
           }
         }
       }
-    })
+    }) */
     // 渲染元素
     // this.graph.fromJSON(graphData)
     // 局中显示
