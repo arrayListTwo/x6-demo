@@ -354,7 +354,7 @@ export default {
       }
     })
 
-    /* this.graph.addEdge({
+    this.graph.addEdge({
       shape: 'edge',
       source,
       target,
@@ -374,8 +374,9 @@ export default {
             strokeWidth: 2
           }
         }
-      }
-    }) */
+      },
+      tools: ['source-arrowhead', 'target-arrowhead']
+    })
     // 渲染元素
     // this.graph.fromJSON(graphData)
     this.graph.on('cell:click', ({ e, x, y, cell, view }) => {
