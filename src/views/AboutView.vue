@@ -9,6 +9,9 @@
       <button @click="setProp">更改prop</button>
       <button @click="setAttr">更改attr</button>
       <button @click="exportGraphData">导出</button>
+      <button @click="zoom">缩放</button>
+      <button @click="getContentArea">获取画布内容的矩形区域（getContentArea）</button>
+      <button @click="getContentBBox">获取画布内容的矩形区域（getContentBBox）</button>
     </div>
   </div>
 </template>
@@ -395,6 +398,8 @@ export default {
     this.graph.centerContent()
     // 自动缩放以适应内容
     // this.graph.zoomToFit({ maxScale: 1 })
+
+    window.__x6_instances__.push(this.graph)
   },
   methods: {
     addNode () {
@@ -428,6 +433,17 @@ export default {
     },
     exportGraphData () {
       console.log(JSON.stringify(this.graph.toJSON(), 2))
+    },
+    zoom () {
+      this.graph.zoom(1, {
+        absolute: true
+      })
+    },
+    getContentArea () {
+      console.log(this.graph.getContentArea())
+    },
+    getContentBBox () {
+      console.log(this.graph.getContentBBox())
     }
   }
 }

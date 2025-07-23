@@ -11,6 +11,15 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'App',
+  mounted () {
+    window.__x6_instances__ = []
+  }
+}
+</script>
+
 <style lang="scss">
 html, body {
   height: 100%;
