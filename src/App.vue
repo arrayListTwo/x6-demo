@@ -4,6 +4,8 @@
       <router-link to="/">Home</router-link>
       |
       <router-link to="/about">About</router-link>
+      |
+      <router-link to="/x6-vue">x6-vue</router-link>
     </nav>
     <div class="view-container">
       <router-view />
